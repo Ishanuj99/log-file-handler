@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log File Reader</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #log-output {
+            white-space: pre-wrap;
+            border: 1px solid #ddd;
+            padding: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        #status {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<h1>Log File Reader and Live Updater</h1>
+<div id="status">Connecting to WebSocket...</div>
+<div id="log-output">Waiting for log updates...</div>
+
+<script>
+        var statusElement = document.getElementById('status');
+        var logOutputElement = document.getElementById('log-output');
+
+        var ws = new WebSocket('ws://localhost:8080/log-updates'); // Adjust the URL as needed
+
+        ws.onopen = function() {
+            statusElement.innerText = 'Connected to WebSocket';
+        };
+
+        ws.onmessage = function(event) {
+            logOutputElement.innerText += event.data + '\n';
+        };
+
+        ws.onclose = function() {
+            statusElement.innerText = 'WebSocket connection closed';
+        };
+
+        ws.onerror = function(error) {
+            statusElement.innerText = 'WebSocket error: ' + error.message;
+        };
+    </script>
+</body>
+</html>
